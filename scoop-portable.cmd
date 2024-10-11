@@ -10,6 +10,16 @@
 
 
 :: ############################################################################
+:: portability
+:: ############################################################################
+set _ROOT=%~dp0
+if not exist "%_ROOT%AppData" (mkdir "%_ROOT%AppData\Local\Temp" & mkdir "%_ROOT%AppData\Roaming")
+set USERPROFILE=%_ROOT%
+set LOCALAPPDATA=%_ROOT%AppData\Local
+set APPDATA=%_ROOT%AppData\Roaming
+set TEMP=%_ROOT%AppData\Local\Temp
+
+:: ############################################################################
 :: act as wrapper for shims\scoop.cmd if this batch file is located at [scoop_install_root]\.portable\scoop.cmd
 :: ############################################################################
 call :ends_with "%~f0" ".portable\scoop.cmd" && (
@@ -117,7 +127,7 @@ if not "%~1" == "" (
 
 :: check if launched via windows explorer
 if /I "%CmdCmdLine:"=%" == "%ComSpec% /c %~dpf0 " (
-  title Command Prompt
+  title Scoop Portable Command Prompt
   if exist "%SCOOP%\apps\clink\current\clink.bat" (
     call :log_TASK Loading clink
     cmd /K %SCOOP%\apps\clink\current\clink.bat inject --quiet
@@ -212,7 +222,7 @@ goto :eof
     $installer_script = $installer_script.replace('$env:XDG_CONFIG_HOME', '\"$env:SCOOP\.portable\"'); ^
     $installer_script = $installer_script -replace '\s\s+Add-ShimsDirToPath', ''; ^
     Set-Content -Path "$env:TEMP\scoop_installer.ps1" -Value $installer_script || exit /B 1
-  powershell -noprofile -File "%TEMP%\scoop_installer.ps1" || exit /B 1
+  powershell -noprofile -File "%TEMP%\scoop_installer.ps1" "-RunAsAdmin" || exit /B 1
   del "%TEMP%\scoop_installer.ps1"
 
   call :patch_scoop
