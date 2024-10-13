@@ -12,7 +12,7 @@
 :: ############################################################################
 :: portability
 :: ############################################################################
-set _ROOT=%~dp0
+set _ROOT=%~dp0.userprofile\
 if not exist "%_ROOT%AppData" (mkdir "%_ROOT%AppData\Local\Temp" & mkdir "%_ROOT%AppData\Roaming")
 set USERPROFILE=%_ROOT%
 set LOCALAPPDATA=%_ROOT%AppData\Local
